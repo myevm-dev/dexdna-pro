@@ -241,3 +241,9 @@ test('static client contains no provider key setting or editable operator fee', 
   assert(html.includes('localStorage.removeItem("ns:settings")'))
   assert(client.includes('no unattended execution'))
 })
+test('external links leave the embedded terminal frame', () => {
+  const html = readFileSync(new URL('../../public/routeforge.html', import.meta.url), 'utf8')
+  const external = html.match(/<a\b[^>]*href="https?:[^"]*"[^>]*>/g) ?? []
+  assert(external.length > 0)
+  for (const tag of external) assert(/target="_(top|blank)"/.test(tag), `link opens inside the iframe: ${tag}`)
+})
